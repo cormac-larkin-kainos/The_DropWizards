@@ -3,10 +3,7 @@ package org.kainos.ea.api;
 import org.kainos.ea.cli.DeliveryEmployeeResponse;
 import org.kainos.ea.cli.EmployeeRequest;
 import org.kainos.ea.cli.DeliveryEmployeeResponse;
-import org.kainos.ea.client.DeliveryEmployeeDoesNotExistException;
-import org.kainos.ea.client.FailedToCreateEmployeeException;
-import org.kainos.ea.client.FailedToGetEmployeeException;
-import org.kainos.ea.client.InvalidEmployeeException;
+import org.kainos.ea.client.*;
 import org.kainos.ea.core.EmployeeValidator;
 import org.kainos.ea.db.EmployeeDao;
 
@@ -55,6 +52,24 @@ public class EmployeeService {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new FailedToGetEmployeeException();
+        }
+
+    }
+
+    public void deleteDeliveryEmployeeByID(int id) throws DeliveryEmployeeDoesNotExistException, FailedToDeleteDeliveryEmployeeException {
+
+        try {
+            // Check if the delivery employee exists before attempting to delete them
+            if (employeeDao.getDeliveryEmployeeByID(id) == null) {
+                throw new DeliveryEmployeeDoesNotExistException();
+            }
+
+            // Delete the delivery employee if they exist
+            employeeDao.deleteDeliveryEmployeeByID(id);
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToDeleteDeliveryEmployeeException();
         }
 
     }

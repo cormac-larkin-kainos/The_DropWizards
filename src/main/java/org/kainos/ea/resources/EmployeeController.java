@@ -3,10 +3,7 @@ package org.kainos.ea.resources;
 import io.swagger.annotations.Api;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.EmployeeRequest;
-import org.kainos.ea.client.DeliveryEmployeeDoesNotExistException;
-import org.kainos.ea.client.FailedToCreateEmployeeException;
-import org.kainos.ea.client.FailedToGetEmployeeException;
-import org.kainos.ea.client.InvalidEmployeeException;
+import org.kainos.ea.client.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +35,21 @@ public class EmployeeController {
         try {
             return Response.ok(employeeService.getDeliveryEmployeeByID(id)).build();
         } catch (FailedToGetEmployeeException e) {
+            return Response.serverError().build();
+        } catch (DeliveryEmployeeDoesNotExistException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @DELETE
+    @Path("/employees/delivery/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteDeliveryEmployeeByID(@PathParam("id") int id) {
+
+        try {
+            employeeService.deleteDeliveryEmployeeByID(id);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (FailedToDeleteDeliveryEmployeeException e) {
             return Response.serverError().build();
         } catch (DeliveryEmployeeDoesNotExistException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
