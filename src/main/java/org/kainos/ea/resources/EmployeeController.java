@@ -31,12 +31,12 @@ public class EmployeeController {
     }
 
     @GET
-    @Path("/employees/{id}")
+    @Path("/employees/delivery/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEmployeeByID(@PathParam("id") int id) {
 
         try {
-            return Response.ok(employeeService.getEmployeeByID(id)).build();
+            return Response.ok(employeeService.getDeliveryEmployeeByID(id)).build();
         } catch (FailedToGetEmployeeException e) {
             return Response.serverError().build();
         } catch (DeliveryEmployeeDoesNotExistException e) {
