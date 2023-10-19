@@ -2,7 +2,9 @@ package org.kainos.ea.api;
 
 import org.kainos.ea.cli.DeliveryEmployeeResponse;
 import org.kainos.ea.cli.EmployeeRequest;
+import org.kainos.ea.client.DeliveryEmployeeDoesNotExistException;
 import org.kainos.ea.client.FailedToCreateEmployeeException;
+import org.kainos.ea.client.FailedToGetEmployeeException;
 import org.kainos.ea.client.InvalidEmployeeException;
 import org.kainos.ea.core.EmployeeValidator;
 import org.kainos.ea.db.EmployeeDao;
@@ -34,6 +36,25 @@ public class EmployeeService {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new FailedToCreateEmployeeException();
+        }
+
+    }
+
+    public DeliveryEmployeeResponse getDeliveryEmployeeByID (int id) throws FailedToGetEmployeeException, DeliveryEmployeeDoesNotExistException {
+
+
+        try {
+            DeliveryEmployeeResponse employee = employeeDao.getDeliveryEmployeeByID(id);
+
+            if (employee == null) {
+                throw new DeliveryEmployeeDoesNotExistException();
+            }
+
+            return employee;
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToGetEmployeeException();
         }
 
     }

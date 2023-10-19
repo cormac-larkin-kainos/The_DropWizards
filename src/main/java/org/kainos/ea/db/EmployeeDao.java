@@ -3,7 +3,6 @@ package org.kainos.ea.db;
 import org.kainos.ea.cli.DeliveryEmployeeResponse;
 import org.kainos.ea.cli.Employee;
 import org.kainos.ea.cli.EmployeeRequest;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +64,33 @@ public class EmployeeDao {
             deliveryEmployees.add(deliveryEmployeeResponse);
         }
         return deliveryEmployees;
+    }
+
+    public DeliveryEmployeeResponse getDeliveryEmployeeByID(int id) throws SQLException {;
+
+        Connection c = DatabaseConnector.getConnection();
+
+        // Select employee with the specified Id AND a team_id of 2 (Delivery Employee)
+        String selectQuery =
+                "SELECT employee_name, salary, bank_account_number, " +
+                "national_insurance_number FROM Employee WHERE employee_id = ? AND team_id = 2";
+
+        PreparedStatement st = c.prepareStatement(selectQuery);
+
+        st.setInt(1, id);
+
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            return new DeliveryEmployeeResponse(
+                    rs.getString("employee_name"),
+                    rs.getDouble("salary"),
+                    rs.getString("bank_account_number"),
+                    rs.getString("national_insurance_number")
+            );
+        }
+
+        return null;
+
     }
 }

@@ -3,11 +3,14 @@ package org.kainos.ea.resources;
 import io.swagger.annotations.Api;
 import org.kainos.ea.api.EmployeeService;
 import org.kainos.ea.cli.EmployeeRequest;
+import org.kainos.ea.client.DeliveryEmployeeDoesNotExistException;
 import org.kainos.ea.client.FailedToCreateEmployeeException;
 import org.kainos.ea.client.FailedToFetchException;
+import org.kainos.ea.client.FailedToGetEmployeeException;
 import org.kainos.ea.client.InvalidEmployeeException;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -45,5 +48,20 @@ public class EmployeeController {
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GET
+    @Path("/employees/delivery/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmployeeByID(@PathParam("id") int id) {
+
+        try {
+            return Response.ok(employeeService.getDeliveryEmployeeByID(id)).build();
+        } catch (FailedToGetEmployeeException e) {
+            return Response.serverError().build();
+        } catch (DeliveryEmployeeDoesNotExistException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 }
