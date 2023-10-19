@@ -1,9 +1,18 @@
 package org.kainos.ea.core;
 
 import org.kainos.ea.cli.EmployeeRequest;
+import org.kainos.ea.db.TeamDao;
+
+import java.sql.SQLException;
 
 public class EmployeeValidator {
-    public boolean isValidEmployee(EmployeeRequest employee) {
+
+    private TeamDao teamDao = new TeamDao();
+    public boolean isValidEmployee(EmployeeRequest employee) throws SQLException {
+
+        if(teamDao.getTeamById(employee.getTeamId())==null){
+            return false;
+        }
 
         if(employee.getEmployeeName().length() >255 || employee.getEmployeeName().length() <1 || employee == null){
             return false;
