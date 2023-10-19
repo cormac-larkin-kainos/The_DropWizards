@@ -32,5 +32,4 @@ public class DatabaseConnectorTest {
            System.err.println(e.getMessage());
        }
     }
-
 }
