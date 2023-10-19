@@ -8,6 +8,8 @@ import org.kainos.ea.client.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+
 @Api("The DropWizards Api Employee")
 @Path("/api")
 public class EmployeeController {
@@ -23,6 +25,19 @@ public class EmployeeController {
         } catch (InvalidEmployeeException e) {
            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (FailedToCreateEmployeeException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/employees/delivery")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDeliveryEmployees(){
+
+        try {
+
+            return Response.ok(employeeService.selectAllDeliveryEmployees()).build();
+        } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
